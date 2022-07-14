@@ -1,7 +1,7 @@
 ---
 title: "LASER Badge"
 subtitle: "LASER Institute Orientation"
-author: "YOUR NAME HERE"
+author: "Tracy Arner"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output:
   html_document:
@@ -157,9 +157,12 @@ What do you notice about this data set? What do you wonder? Add one-two
 thoughts following the dashes next (you can add additional dashes if you
 like!):
 
--   
+-   This data set appears to be students' grades in a variety of
+    courses.
 
--   
+-   The variables would be more useful if I had a data dictionary so I
+    wonder what the parameters of each of them are other than the
+    obvious ones.
 
 There are other ways to inspect your data; the `glimpse()` function
 provides one such way. Run the code below to take a glimpse at your
@@ -184,11 +187,13 @@ your area of work and/or research.
 
 What rows typically (or you think may) represent:
 
--   
+-   Rows are typically the participant in the study. Often, in my work,
+    these are students who completed an intervention of some kind.
 
 What columns typically (or you think may) represent:
 
--   
+-   Columns are the variables-- categoricals (demographics) and scores
+    or units of measure
 
 Next, we'll use a few functions that are handy for preparing data in
 table form.
@@ -235,7 +240,7 @@ variable to this code.
 
 ```{r}
 d |> 
-  select(student_id, total_points_possible, total_points_earned)
+  select(student_id, total_points_possible, total_points_earned, FinalGradeCEMS)
 ```
 
 Once added, the output should be different than in the code above -
@@ -261,13 +266,15 @@ play around with the code a bit!).
 
 ```{r}
 d |> 
-  filter(FinalGradeCEMS > 70)
+  filter(FinalGradeCEMS > 90)
 ```
 
 What happens when you change the cut-off from 70 to something else? Add
 a thought (or more):
 
--   
+-   When the value increases the number of cases decreases and reverse.
+    So, the cutoff would depend on the question you are trying to
+    answer.
 
 ### Arrange
 
@@ -302,8 +309,8 @@ glimpsed at the names of all of the variables.
 
 ```{r}
 d |> 
-  select(student_id, FinalGradeCEMS) |> 
-  arrange(desc(FinalGradeCEMS))
+  select(student_id, TimeSpent_hours) |> 
+  arrange(desc(TimeSpent_hours))
 ```
 
 ### Reach 1 🎉
@@ -318,7 +325,9 @@ who wish to do a bit more with these functions at this time (we'll do
 more in class, too!)*
 
 ```{r}
-
+d |>
+  select(student_id, FinalGradeCEMS, total_points_earned)
+  arrange(desc(total_points_earned))
 ```
 
 ## 3. EXPLORE
@@ -357,7 +366,7 @@ consider this list of valid color names here:
 
 ```{r}
 ggplot(d, aes(x = FinalGradeCEMS)) +
-  geom_histogram(fill = "blue")
+  geom_histogram(fill = "dark gray")
 ```
 
 Finally, we'll make one more change; visualize the distribution of
@@ -366,8 +375,8 @@ so by swapping out the name for another variable with FinalGradeCEMS.
 Also, change the color to one other than blue.
 
 ```{r}
-ggplot(d, aes(x = FinalGradeCEMS)) +
-  geom_histogram(fill = "blue")
+ggplot(d, aes(x = TimeSpent_hours)) +
+  geom_histogram(fill = "light green")
 ```
 
 ### Reach 2 🎉
@@ -378,7 +387,7 @@ the names of two variables to the code below for what is now simply XXX
 (a placeholder).
 
 ```{r}
-ggplot(d, aes(x = XXX, y = XXX)) +
+ggplot(d, aes(x = FinalGradeCEMS, y = TimeSpent_hours)) +
   geom_point()
 ```
 
@@ -412,7 +421,7 @@ results? We're going to dive into this *much* more: if you have many
 questions now, you're in the right spot!
 
 ```{r}
-m2 <- lm(FinalGradeCEMS ~ TimeSpent + subject, data = d)
+m2 <- lm(FinalGradeCEMS ~ TimeSpent + subject + int, data = d)
 summary(m2)
 ```
 
